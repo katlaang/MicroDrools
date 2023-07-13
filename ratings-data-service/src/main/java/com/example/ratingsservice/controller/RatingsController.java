@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/ratings")
-public class RatingsController {
+public class  RatingsController {
 
     @RequestMapping("/{userId}")
     public User getRatingsOfUser(@PathVariable String userId) {
@@ -20,15 +20,17 @@ public class RatingsController {
     @RequestMapping("/addUserRating/{userId}/{movieId}/{rating}")
     public ResponseEntity<String> addUserRating(@PathVariable String userId, @PathVariable String movieId, @PathVariable int rating) {
 
-        boolean newMovie = (boolean) new RatingsService().createUserRating(userId, movieId, rating);
-        if(newMovie) {
-            return ResponseEntity.ok().body("Rating added succesfully");
-        }
-        else if(!newMovie){
-            return ResponseEntity.ok().body("Rating updated succesfully");
+        Object newMovie = new RatingsService().createUserRating(userId, movieId, rating);
+        if(newMovie != null) {
+            boolean newMovieBoolean = (boolean) newMovie;
+            if (newMovieBoolean) {
+                return ResponseEntity.ok().body("Rating added succesfully");
+            } else {
+                return ResponseEntity.ok().body("Rating updated succesfully");
+            }
         }
         else {
-            return ResponseEntity.badRequest().body("User suspected of being a BOT");
+            return ResponseEntity.badRequest().body("User suspected of being a BOT. Rating was not added");
         }
     }
 }

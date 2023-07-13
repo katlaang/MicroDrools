@@ -29,7 +29,7 @@ public class RatingsService {
     public Object createUserRating(String userId, String movieId, int rating) {
         User user = new User(userId);
         Rating newRating = new Rating(movieId, rating);
-        user.addRating(newRating);
+        boolean newMovie = user.addRating(newRating);
         try {
             kieSession.insert(user);
             kieSession.fireAllRules();
@@ -38,7 +38,8 @@ public class RatingsService {
         }
         //Don't allow suspected bots to add ratings
         if(user.getStatus() != Status.BOT) {
-            return user.saveToFile(newRating);
+            user.saveToFile(newRating);
+            return newMovie;
         }
         return null;
     }

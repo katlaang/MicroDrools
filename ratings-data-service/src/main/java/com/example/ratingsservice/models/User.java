@@ -47,11 +47,21 @@ public class User {
     }
 
     public int getAverageRating() {
-        return this.ratings.stream().mapToInt(Rating::getRating).sum()/this.getRatingCount();
+        return this.ratings.stream().mapToInt(Rating::getRating).sum() / this.getRatingCount();
     }
 
-    public void addRating(Rating rating) {
-        this.ratings.add(rating);
+    public boolean addRating(Rating rating) {
+        boolean newMovie = true;
+        for (Rating ratingItem : this.ratings) {
+            if (Objects.equals(ratingItem.getMovieId(), rating.getMovieId())) {
+                ratingItem.setRating(rating.getRating());
+                newMovie = false;
+            }
+        }
+        if (newMovie) {
+            this.ratings.add(rating);
+        }
+        return newMovie;
     }
 
     public void setRatings(List<Rating> ratings) {
@@ -66,14 +76,14 @@ public class User {
             while ((line = reader.readLine()) != null) {
                 //Format is userId, movieId1, rating1, movieId2, rating2,...
                 String[] userData = line.split(",");
-                if(!userData[0].isEmpty()) {
+                if (!userData[0].isEmpty()) {
                     List<Rating> ratings = new ArrayList<Rating>();
                     for (int i = 1; i < userData.length; i += 2) {
                         String movieId = userData[i];
                         int ratingValue = Integer.parseInt(userData[i + 1]);
                         Rating rating = new Rating(movieId, ratingValue);
-                        if (userData[0].equals(userId)) {
-                            this.ratings.add(rating);
+                        if(this.getUserId().equals(userData[0])) {
+                            this.addRating(rating);
                         }
                         ratings.add(rating);
                     }
@@ -87,26 +97,19 @@ public class User {
     }
 
     //Returns boolean on wether a new movie was added to the file
-    public boolean saveToFile(Rating newRating) {
-        boolean newMovie = true;
+    public void saveToFile(Rating newRating) {
         try (FileWriter writer = new FileWriter("ratings-data-service/src/main/resources/data/userRatings.csv", false)) {
             StringBuilder userData = new StringBuilder();
-            this.ratings.add(newRating);
             file.put(this.userId, this.ratings);
             //Add ratings
             Set<String> userIds = this.file.keySet();
             for (String userId : userIds) {
                 userData.append(userId);
                 List<Rating> ratingsForUser = this.file.get(userId);
-                for(Rating rating : ratingsForUser) {
-                    //update movie rating
-                    if (newRating.getMovieId() == rating.getMovieId()) {
-                        rating.setRating(newRating.getRating());
-                        newMovie = false;
-                    }
+                for (Rating rating : ratingsForUser) {
                     userData.append(",").append(rating.getMovieId()).append(",").append(rating.getRating());
                 }
-                    userData.append("\n");
+                userData.append("\n");
             }
             userData.append(System.lineSeparator());
             writer.write(userData.toString());
@@ -114,6 +117,5 @@ public class User {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return newMovie;
     }
 }

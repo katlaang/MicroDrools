@@ -8,29 +8,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.List;
 import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping("/catalog")
 public class MovieCatalogController {
-
     private final RestTemplate restTemplate;
-
     private final MovieInfoService movieInfoService;
-
     private final UserRatingService userRatingService;
-
     public MovieCatalogController(RestTemplate restTemplate,
                                   MovieInfoService movieInfoService,
                                   UserRatingService userRatingService) {
-
         this.restTemplate = restTemplate;
         this.movieInfoService = movieInfoService;
         this.userRatingService = userRatingService;
     }
-
     /**
      * Makes a call to MovieInfoService to get movieId, name and description,
      * Makes a call to RatingsService to get ratings
