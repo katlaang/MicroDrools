@@ -15,7 +15,7 @@ public class MovieController {
     @Value("${api.key}")
     private String apiKey;
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     public MovieController(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -27,6 +27,7 @@ public class MovieController {
         final String url = "https://api.themoviedb.org/3/movie/" + movieId + "?api_key=" + apiKey;
         MovieSummary movieSummary = restTemplate.getForObject(url, MovieSummary.class);
 
+        assert movieSummary != null;
         return new Movie(movieId, movieSummary.getTitle(), movieSummary.getOverview());
     }
 }

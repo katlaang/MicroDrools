@@ -36,6 +36,7 @@ public class MovieInfoService {
     public CatalogItem getCatalogItem(Rating rating) {
         String movieDetailsUrl = "http://movie-info-service/movies/" + rating.getMovieId();
         Movie movie = this.restTemplate.getForObject(movieDetailsUrl, Movie.class);
+        assert movie != null;
         return new CatalogItem(movie.getName(), movie.getDescription(), rating.getRating(), rating.getRatingDescription());
     }
 
