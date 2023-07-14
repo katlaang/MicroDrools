@@ -1,55 +1,34 @@
 package com.example.ratingsservice.models;
 
+import lombok.Data;
+
 import java.io.FileReader;
 import java.util.*;
 import java.io.*;
 
+@Data
 public class User {
 
     private String userId;
-
     private Status status;
-
     private List<Rating> ratings;
-
     private HashMap<String, List<Rating>> file;
-
     public enum Status {
         NEW_USER,
         HEAVY_USER,
         BOT
     }
-
     public User(String userId) {
         this.userId = userId;
         this.ratings = new ArrayList<Rating>();
-        readFromFile(this.userId);
+        readFromFile();
     }
-
-    public String getUserId() {
-        return this.userId;
-    }
-
-    public Status getStatus() {
-        return this.status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public List<Rating> getRatings() {
-        return ratings;
-    }
-
     public int getRatingCount() {
         return this.ratings.size();
     }
-
-    public int getAverageRating() {
-        return this.ratings.stream().mapToInt(Rating::getRating).sum() / this.getRatingCount();
+    public double getAverageRating() {
+        return (double) this.ratings.stream().mapToInt(Rating::getRating).sum() / this.getRatingCount();
     }
-
     public boolean addRating(Rating rating) {
         boolean newMovie = true;
         for (Rating ratingItem : this.ratings) {
@@ -64,12 +43,9 @@ public class User {
         return newMovie;
     }
 
-    public void setRatings(List<Rating> ratings) {
-        this.ratings = ratings;
-    }
-
-    public void readFromFile(String userId) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("ratings-data-service/src/main/resources/data/userRatings.csv"))) {
+    public void readFromFile() {
+        try (BufferedReader reader = new BufferedReader(
+                new FileReader("ratings-data-service/src/main/resources/data/userRatings.csv"))) {
             String line;
             file = new HashMap<>();
             //Read lines until at the end of file
@@ -96,9 +72,9 @@ public class User {
         }
     }
 
-    //Returns boolean on wether a new movie was added to the file
-    public void saveToFile(Rating newRating) {
-        try (FileWriter writer = new FileWriter("ratings-data-service/src/main/resources/data/userRatings.csv", false)) {
+    public void saveToFile() {
+        try (FileWriter writer = new FileWriter(
+                "ratings-data-service/src/main/resources/data/userRatings.csv", false)) {
             StringBuilder userData = new StringBuilder();
             file.put(this.userId, this.ratings);
             //Add ratings

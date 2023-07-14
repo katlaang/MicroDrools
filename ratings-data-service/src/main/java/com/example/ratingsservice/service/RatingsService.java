@@ -22,7 +22,6 @@ public class RatingsService {
         } finally {
             kieSession.dispose();
         }
-
         return user;
     }
 
@@ -38,7 +37,7 @@ public class RatingsService {
         }
         //Don't allow suspected bots to add ratings
         if(user.getStatus() != Status.BOT) {
-            user.saveToFile(newRating);
+            user.saveToFile();
             return newMovie;
         }
         return null;

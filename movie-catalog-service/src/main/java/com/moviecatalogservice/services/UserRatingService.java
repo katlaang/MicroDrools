@@ -40,7 +40,7 @@ public class UserRatingService {
         UserRating userRating = new UserRating();
         userRating.setUserId(userId);
         userRating.setRatings(Collections.singletonList(
-                new Rating("0", 0)
+                new Rating("0", 0, "Blank")
         ));
 
         return userRating;
