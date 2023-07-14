@@ -8,8 +8,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @EnableDiscoveryClient
 public class RatingsDataServiceApplication {
 
-//     KieSession kieSession = new DroolsRuleConfig().initialize();
-
     public static void main(String[] args) {
         SpringApplication.run(RatingsDataServiceApplication.class, args);
     }
