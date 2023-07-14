@@ -36,10 +36,10 @@ public class MovieInfoService {
     public CatalogItem getCatalogItem(Rating rating) {
         String movieDetailsUrl = "http://movie-info-service/movies/" + rating.getMovieId();
         Movie movie = this.restTemplate.getForObject(movieDetailsUrl, Movie.class);
-        return new CatalogItem(movie.getName(), movie.getDescription(), rating.getRating());
+        return new CatalogItem(movie.getName(), movie.getDescription(), rating.getRating(), rating.getRatingDescription());
     }
 
     public CatalogItem getFallbackCatalogItem(Rating rating) {
-        return new CatalogItem("Movie name not found", "", rating.getRating());
+        return new CatalogItem("Movie name not found", "", rating.getRating(), rating.getRatingDescription());
     }
 }
